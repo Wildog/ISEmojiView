@@ -43,7 +43,7 @@ final internal class PageControlBottomView: UIView {
         if #available(iOS 14.0, *) {
             bottomView.pageControl.allowsContinuousInteraction = true
         }
-        bottomView.pageControl.addTarget(self, action: #selector(pageControlValueDidChange), for: .valueChanged)
+        bottomView.pageControl.addTarget(bottomView, action: #selector(pageControlValueDidChange), for: .valueChanged)
         return bottomView
     }
     
