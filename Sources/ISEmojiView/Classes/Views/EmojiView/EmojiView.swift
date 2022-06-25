@@ -191,6 +191,11 @@ extension EmojiView: PageControlBottomViewDelegate {
         delegate?.emojiViewDidPressDismissKeyboardButton(self)
     }
     
+    func pageControlBottomViewPageDidChange(to index: Int, _ bottomView: PageControlBottomView) {
+        guard index < emojis.count else { return }
+        emojiCollectionView?.scrollToCategory(emojis[index].category, animated: false)
+    }
+    
 }
 
 // MARK: - CategoriesBottomViewDelegate

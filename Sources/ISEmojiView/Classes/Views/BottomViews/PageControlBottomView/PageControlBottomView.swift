@@ -12,6 +12,7 @@ internal protocol PageControlBottomViewDelegate: AnyObject {
     
     func pageControlBottomViewDidPressDeleteBackwardButton(_ bottomView: PageControlBottomView)
     func pageControlBottomViewDidPressDismissKeyboardButton(_ bottomView: PageControlBottomView)
+    func pageControlBottomViewPageDidChange(to index: Int, _ bottomView: PageControlBottomView)
     
 }
 
@@ -39,16 +40,30 @@ final internal class PageControlBottomView: UIView {
         }
         
         bottomView.pageControl.numberOfPages = categoriesCount
+        if #available(iOS 14.0, *) {
+            bottomView.pageControl.allowsContinuousInteraction = true
+        }
+        bottomView.pageControl.addTarget(self, action: #selector(pageControlValueDidChange), for: .valueChanged)
         return bottomView
     }
     
     // MARK: - Internal functions
     
     internal func updatePageControlPage(_ page: Int) {
-        pageControl.currentPage = page
+        if #available(iOS 14.0, *) {
+            if pageControl.interactionState == .none {
+                pageControl.currentPage = page
+            }
+        } else {
+            pageControl.currentPage = page
+        }
     }
     
     // MARK: - IBActions
+    
+    @objc private func pageControlValueDidChange() {
+        delegate?.pageControlBottomViewPageDidChange(to: pageControl.currentPage, self)
+    }
     
     @IBAction private func deleteBackward() {
         delegate?.pageControlBottomViewDidPressDeleteBackwardButton(self)
